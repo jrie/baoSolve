@@ -36,7 +36,7 @@ Newline as divider between playboards
 
 ## Why the output?
 
-BaoSolve does show you the output of the possible best move for a game for each playboard provided. So it does also a little bit train on how the game works. Only the latest "best" game is shown so, means if two games have equal steals, only the latest is shown so.
+BaoSolve does show you the output of the possible best move for a game for each playboard provided. So it does also a little bit train on how the game works. Only the latest "best" game is shown so, means if two games have equal steals, only the first is shown so.
 
 ## Why
 
