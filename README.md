@@ -20,7 +20,7 @@ The fields can be of any length per line, just they should be equal and equally 
 
 An example field with 2 playstones each, basic starting scenario (8 fields per row but can be more, but 2 rows for each player):
 
-- EXAMPLE ------------------
+- EXAMPLE (fiels are not seperated by blank lines!)
 
 2;2;2;2;2;2;2;2
 
@@ -32,11 +32,11 @@ An example field with 2 playstones each, basic starting scenario (8 fields per r
 
 Newline as divider between playboards
 
-- EXAMPLE -----------------
+- EXAMPLE
 
 ## Why the output?
 
-BaoSolve does show you the output of the possible best move for a game for each playboard provided. So it does also a little bit train on how the game works. Only the latest "best" game is shown so, means if to games have equal steals, only the latest is shown so.
+BaoSolve does show you the output of the possible best move for a game for each playboard provided. So it does also a little bit train on how the game works. Only the latest "best" game is shown so, means if two games have equal steals, only the latest is shown so.
 
 ## Why
 
