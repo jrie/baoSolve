@@ -19,20 +19,13 @@ First you enter the first row of fields for a player, meaning the amount of ston
 The fields can be of any length per line, just they should be equal and equally for each player.
 
 An example field with 2 playstones each, basic starting scenario (8 fields per row but can be more, but 2 rows for each player):
-
-- EXAMPLE (fiels are not seperated by blank lines!)
-
+```
 2;2;2;2;2;2;2;2
-
 2;2;2;2;2;2;2;2
-
 2;2;2;2;2;2;2;2
-
 2;2;2;2;2;2;2;2
-
 Newline as divider between playboards
-
-- EXAMPLE
+```
 
 ## Why the output?
 
