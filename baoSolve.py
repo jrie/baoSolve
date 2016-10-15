@@ -73,7 +73,7 @@ def playGame(rowsA, rowsB, fieldToStart, beVerbose):
 
                 rowsA[enemyField] = 0
 
-                if (enemyStones != 0):
+                if (enemyStones != 0 and movesMade != 0):
                     stonesStolen += enemyStones
                     stonesInHand += enemyStones
 
