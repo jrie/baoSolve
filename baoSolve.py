@@ -71,14 +71,15 @@ def playGame(rowsA, rowsB, fieldToStart, beVerbose):
                 enemyField = (fieldsInRow)+currentField;
                 enemyStones = rowsA[enemyField]
 
-                rowsA[enemyField] = 0
+                if (movesMade != 0):
+                    rowsA[enemyField] = 0
 
-                if (enemyStones != 0 and movesMade != 0):
-                    stonesStolen += enemyStones
-                    stonesInHand += enemyStones
+                    if (enemyStones != 0):
+                        stonesStolen += enemyStones
+                        stonesInHand += enemyStones
 
-                    if (beVerbose):
-                        print "[CAPTURED] %3d STONES - OPPONENT FIELD %d" %(enemyStones, enemyField+1)
+                        if (beVerbose):
+                            print "[CAPTURED] %3d STONES - OPPONENT FIELD %d" %(enemyStones, enemyField+1)
 
             rowsB[currentField] = 0
 
