@@ -27,9 +27,18 @@ def printPlayboard(rowsA, rowsB):
     print fieldSep
     outputRows(rowsB, fieldsInRow)
 
+def printPlayboardIndexes(rowsA):
+    fieldsInRow = len(rowsA) / 2
+    print ";".join(("0" + str(num+1) if num+1 < 10 else str(num+1)) for num in xrange(0, fieldsInRow, 1));
+    print ";".join(("0" + str(num+1) if num+1 < 10 else str(num+1)) for num in xrange(fieldsInRow, fieldsInRow * 2, 1));
+    fieldSep = "-" * ((fieldsInRow * 3)-1)
+    print fieldSep;
+    print ";".join(("0" + str(num+1) if num+1 < 10 else str(num+1)) for num in xrange(0, fieldsInRow, 1));
+    print ";".join(("0" + str(num+1) if num+1 < 10 else str(num+1)) for num in xrange(fieldsInRow, fieldsInRow * 2, 1));
+
 #-------------------------------------------------------------------------------
 
-def playGame(rowsA, rowsB, fieldToStart, beVerbose):
+def playGame(rowsA, rowsB, fieldToStart, beVerbose, showGameDetails):
 
     totalFields = len(rowsB)
     fieldsInRow = len(rowsB) / 2
@@ -45,8 +54,13 @@ def playGame(rowsA, rowsB, fieldToStart, beVerbose):
     movesMade = 0
     stonesStolen = 0
 
-    if (beVerbose):
-        print "[GAME START]"
+    if (beVerbose & showGameDetails):
+        print "\n---------------------------------------------------------------\n[GAME START]\n"
+    """
+    elif (beVerbose):
+        print "\n---------------------------------------------------------------\n[GAME START]\n"
+        printPlayboard(rowsA, rowsB)
+    """
 
     while(True):
 
@@ -54,14 +68,14 @@ def playGame(rowsA, rowsB, fieldToStart, beVerbose):
 
 
         if (rowsB[currentField] >= 2):
-            if (beVerbose):
+            if (beVerbose & showGameDetails):
                 print "\n[------------------------ MAKETURN %d -----------------------]" %(movesMade+1)
                 printPlayboard(rowsA, rowsB)
                 print "\n"
 
             stonesInHand = rowsB[currentField]
 
-            if (beVerbose):
+            if (beVerbose & showGameDetails):
                 print "[STARTMOVE @ FIELD %d]" %(currentField+1)
                 print "[STONES] %3d [FIELD %d]" %(stonesInHand, currentField+1)
 
@@ -78,16 +92,16 @@ def playGame(rowsA, rowsB, fieldToStart, beVerbose):
                         stonesStolen += enemyStones
                         stonesInHand += enemyStones
 
-                        if (beVerbose):
+                        if (beVerbose & showGameDetails):
                             print "[CAPTURED] %3d STONES - OPPONENT FIELD %d" %(enemyStones, enemyField+1)
 
             rowsB[currentField] = 0
 
-            if (beVerbose):
+            if (beVerbose & showGameDetails):
                 print "-------------------------------------------------------------"
 
         else:
-            if (beVerbose):
+            if (beVerbose & showGameDetails):
                 print "[OUT OF MOVES] %d STONES @ FIELD %d" %(rowsB[nextField], nextField+1)
 
             break
@@ -104,10 +118,10 @@ def playGame(rowsA, rowsB, fieldToStart, beVerbose):
             rowsB[nextField] += 1
             stonesInHand -= 1;
 
-            if (beVerbose):
+            if (beVerbose & showGameDetails):
                 print "[MOVETO] %3d [STONES IN HAND %d @ FIELD %d]" %(nextField+1, stonesInHand, rowsB[nextField])
 
-        if (beVerbose):
+        if (beVerbose & showGameDetails):
             print "\n"
             printPlayboard(rowsA, rowsB)
             print "\n[------------------------ ENDTURN %d -------------------------]" %(movesMade+1)
@@ -115,11 +129,13 @@ def playGame(rowsA, rowsB, fieldToStart, beVerbose):
         movesMade += 1
 
     if (beVerbose):
+        if not (showGameDetails):
+            print "============================================================="
         print "\n[GAME END SUMMARY]"
+        print "GAME STARTING FIELD: %d" %(fieldToStart+1)
         print "STONES STOLEN: %d" %(stonesStolen)
         print "TURNS: %d\n" %(movesMade)
-        print "-------------------------------------------------------------"
-        print ("FINAL PLAYBOARD:")
+        print ("[FINAL PLAYBOARD]")
         printPlayboard(rowsA, rowsB)
         print ""
 
@@ -138,7 +154,9 @@ if __name__ == "__main__":
     rowsABestGame = []
     rowsBBestGame = []
 
-    beVerbose = False
+    beVerbose = True
+    showGameDetails = False;
+
     try:
         with open("playboard.csv", "r") as inputFile:
 
@@ -174,12 +192,18 @@ if __name__ == "__main__":
                 if (row == 4):
                     game += 1
 
+                    if (game == 1 & beVerbose):
+                        print "[STATUS]\nFIELD INDEXES ARE AS FOLLOWS FOR ALL GAMES:\n"
+                        printPlayboardIndexes(rowsA);
+                        print "";
+
+
                     gameResult = [0,0,0] # [field started, stolen, turns made]
                     bestResult = [0,0,0]
 
                     # The field is zero based
                     for field in xrange(len(rowsB)-1, (len(rowsB) / 2)-1, -1):
-                        gameResult = playGame(rowsA, rowsB, field, beVerbose)
+                        gameResult = playGame(rowsA, rowsB, field, beVerbose, showGameDetails)
 
                         if (gameResult[1] > bestResult[1]):
                             bestResult = gameResult
@@ -195,9 +219,9 @@ if __name__ == "__main__":
                         rowsB = []
                         rowsB.extend(rowsBOriginal)
 
-                    for field in xrange(0, len(rowsB) / 2, 1):
+                    for field in xrange(len(rowsB) / 2, -1, -1):
 
-                        gameResult = playGame(rowsA, rowsB, field, beVerbose)
+                        gameResult = playGame(rowsA, rowsB, field, beVerbose, showGameDetails)
 
                         if (gameResult[1] > bestResult[1]):
                             bestResult = gameResult
@@ -214,13 +238,14 @@ if __name__ == "__main__":
                         rowsB.extend(rowsBOriginal)
 
 
-                    print "BEST RESULT FOR GAME %4d: FIELD %d, %d STOLEN, %d TURNS\n\n" %(game, bestResult[0]+1, bestResult[1], bestResult[2])
+                    if not (showGameDetails):
+                        print "BEST RESULT FOR GAME %4d: FIELD %d, %d STOLEN, %d TURNS\n\n" %(game, bestResult[0]+1, bestResult[1], bestResult[2])
 
-                    print "[------------------------- REPLAY WINNING GAME WITH OUTPUT -------------------------]"
-                    playGame(rowsA, rowsB, bestResult[0], True)
-                    print "[------------------------------------ END REPLAY -----------------------------------]"
+                        print "[------------------------- REPLAY WINNING GAME WITH OUTPUT -------------------------]"
+                        playGame(rowsA, rowsB, bestResult[0], True, False)
+                        print "[------------------------------------ END REPLAY -----------------------------------]"
 
     except IOError as e:
         print "Could not find the file \"playboard.csv\". Please add it to the directory. Error Message: %s" %(e.strerror)
-    except Error as e:
-        print "Unknown error occured, message: %s" %(e.strerror)
+    except Exception as e:
+        print "Unknown error occured, message: %s" %(e.message)
